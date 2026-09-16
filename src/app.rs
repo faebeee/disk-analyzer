@@ -52,7 +52,6 @@ impl App {
         node
     }
 
-    #[allow(dead_code)]
     pub fn zoom_root_path(&self) -> PathBuf {
         self.zoom_root().path.clone()
     }
@@ -135,7 +134,6 @@ impl App {
     /// rescan), and recompute ancestor sizes. If fresh has size 0 and no
     /// children and doesn't exist anymore, the caller should instead call
     /// `remove_path`.
-    #[allow(dead_code)]
     pub fn refresh_path(&mut self, path: &Path, fresh: Node) {
         if let Some(node) = self.root.find_mut(path) {
             *node = fresh;

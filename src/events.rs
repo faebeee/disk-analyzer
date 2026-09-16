@@ -8,6 +8,7 @@ pub enum Action {
     None,
     Quit,
     DeleteConfirmed,
+    Refresh,
 }
 
 pub fn handle_key(app: &mut App, key: KeyEvent) -> Action {
@@ -36,6 +37,7 @@ pub fn handle_key(app: &mut App, key: KeyEvent) -> Action {
                     app.status = Some("Nothing selected".to_string());
                 }
             }
+            KeyCode::Char('r') | KeyCode::Char('R') => return Action::Refresh,
             _ => {}
         },
         Mode::Scanning | Mode::Error(_) => {

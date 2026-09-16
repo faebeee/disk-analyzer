@@ -67,7 +67,6 @@ impl Node {
     }
 
     /// Find a mutable reference to the node matching `path`, searching this subtree.
-    #[allow(dead_code)]
     pub fn find_mut(&mut self, path: &std::path::Path) -> Option<&mut Node> {
         if self.path == path {
             return Some(self);

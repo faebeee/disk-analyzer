@@ -108,7 +108,6 @@ fn scan_entry(entry: &fs::DirEntry) -> Option<Node> {
 
 /// Rescan a single path (e.g. after deleting something) and return the
 /// refreshed Node, updating the error counter passed in.
-#[allow(dead_code)]
 pub fn rescan_path(path: &Path) -> Node {
     if path.is_dir() {
         scan_dir(path)

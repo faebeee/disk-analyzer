@@ -194,7 +194,7 @@ fn draw_info_panel(frame: &mut Frame, app: &App, area: Rect) {
 
 fn draw_footer(frame: &mut Frame, _app: &App, area: Rect) {
     let block = Block::default().borders(Borders::ALL);
-    let text = "↑/↓ move  Enter/→ zoom in  Backspace/←/Esc zoom out  x delete  q quit";
+    let text = "↑/↓ move  Enter/→ zoom in  Backspace/←/Esc zoom out  x delete  r refresh  q quit";
     let para = Paragraph::new(text).block(block);
     frame.render_widget(para, area);
 }

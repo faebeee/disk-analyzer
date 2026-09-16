@@ -126,6 +126,9 @@ fn run_app(
                             events::Action::DeleteConfirmed => {
                                 perform_delete(a);
                             }
+                            events::Action::Refresh => {
+                                perform_refresh(a);
+                            }
                             events::Action::None => {}
                         }
                     } else if let crossterm::event::KeyCode::Char('q') = key.code {
@@ -161,4 +164,11 @@ fn perform_delete(app: &mut App) {
             app.status = Some(format!("Failed to delete {}: {}", path.display(), e));
         }
     }
+}
+
+fn perform_refresh(app: &mut App) {
+    let path = app.zoom_root_path();
+    let fresh = scanner::rescan_path(&path);
+    app.refresh_path(&path, fresh);
+    app.status = Some(format!("Refreshed {}", path.display()));
 }

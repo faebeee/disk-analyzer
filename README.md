@@ -13,7 +13,7 @@ directly from the UI.
 │   0.0%   1.17 KiB [------------------------------] readme.md      ││Size: 7.45 GiB               │
 │                                                                    ││% of view: 59.3%             │
 └─────────────────────────────────────────────────────────────────────────────────────────────────┘
-│↑/↓ move  Enter/→ zoom in  Backspace/←/Esc zoom out  x delete  q quit                              │
+│↑/↓ move  Enter/→ zoom in  Backspace/←/Esc zoom out  x delete  r refresh  q quit                    │
 └─────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -92,6 +92,7 @@ completes, then switches to the interactive browser.
 | `Enter` / `→`               | Zoom into the selected folder              |
 | `Backspace` / `←` / `Esc`   | Zoom out to the parent folder              |
 | `x` / `Delete`              | Delete the selected file or folder         |
+| `r`                         | Refresh (rescan) the current folder        |
 | `y`                         | Confirm deletion (while prompted)          |
 | `n` / `Esc`                 | Cancel deletion (while prompted)           |
 | `q`                         | Quit                                       |
