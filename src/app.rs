@@ -12,6 +12,27 @@ pub enum Mode {
     Error(String),
 }
 
+/// Total/available space of the filesystem/mount that the scan root lives on.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct DiskSpace {
+    pub total: u64,
+    pub available: u64,
+}
+
+impl DiskSpace {
+    pub fn used(&self) -> u64 {
+        self.total.saturating_sub(self.available)
+    }
+
+    pub fn used_fraction(&self) -> f64 {
+        if self.total == 0 {
+            0.0
+        } else {
+            self.used() as f64 / self.total as f64
+        }
+    }
+}
+
 pub struct App {
     pub root: Node,
     /// Chain of child-indices from `root` down to the current zoom root.
@@ -22,10 +43,12 @@ pub struct App {
     pub progress: ScanProgress,
     pub scan_errors: u64,
     pub status: Option<String>,
+    pub disk_space: DiskSpace,
 }
 
 impl App {
     pub fn new(root: Node) -> Self {
+        let disk_space = disk_space_for(&root.path);
         App {
             root,
             zoom_path: Vec::new(),
@@ -37,6 +60,7 @@ impl App {
             },
             scan_errors: 0,
             status: None,
+            disk_space,
         }
     }
 
@@ -148,6 +172,11 @@ impl App {
         self.clamp_selection();
     }
 
+    /// Re-query total/available space for the mount containing the scan root.
+    pub fn refresh_disk_space(&mut self) {
+        self.disk_space = disk_space_for(&self.root.path);
+    }
+
     fn clamp_selection(&mut self) {
         // Walk down and truncate/clamp selection indices to valid ranges.
         let mut node = self.zoom_root_or_none();
@@ -175,6 +204,15 @@ impl App {
         }
         Some(node)
     }
+}
+
+/// Query total/available space for the mount containing `path`. Falls back
+/// to zeroed values if the underlying syscall fails (e.g. unsupported
+/// platform or invalid path).
+fn disk_space_for(path: &Path) -> DiskSpace {
+    let total = fs4::total_space(path).unwrap_or(0);
+    let available = fs4::available_space(path).unwrap_or(0);
+    DiskSpace { total, available }
 }
 
 fn remove_from(node: &mut Node, path: &Path) -> bool {

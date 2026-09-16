@@ -28,21 +28,68 @@ pub fn draw(frame: &mut Frame, app: &App) {
 
     let chunks = Layout::default()
         .direction(Direction::Vertical)
-        .constraints([Constraint::Min(10), Constraint::Length(3)])
+        .constraints([
+            Constraint::Length(3),
+            Constraint::Min(10),
+            Constraint::Length(3),
+        ])
         .split(size);
 
     let main_chunks = Layout::default()
         .direction(Direction::Horizontal)
         .constraints([Constraint::Percentage(70), Constraint::Percentage(30)])
-        .split(chunks[0]);
+        .split(chunks[1]);
 
+    draw_top_bar(frame, app, chunks[0]);
     draw_treelist(frame, app, main_chunks[0]);
     draw_info_panel(frame, app, main_chunks[1]);
-    draw_footer(frame, app, chunks[1]);
+    draw_footer(frame, app, chunks[2]);
 
     if matches!(app.mode, Mode::ConfirmDelete) {
         draw_confirm_modal(frame, app, size);
     }
+}
+
+fn draw_top_bar(frame: &mut Frame, app: &App, area: Rect) {
+    let block = Block::default()
+        .title(" Disk Space ")
+        .borders(Borders::ALL);
+    let inner = block.inner(area);
+    frame.render_widget(block, area);
+
+    if inner.width == 0 || inner.height == 0 {
+        return;
+    }
+
+    let ds = app.disk_space;
+    let used = ds.used();
+    let pct = ds.used_fraction() * 100.0;
+
+    let label = format!(
+        "Total: {}   Used: {} ({:.1}%)   Available: {}",
+        format_size(ds.total, BINARY),
+        format_size(used, BINARY),
+        pct,
+        format_size(ds.available, BINARY),
+    );
+
+    // Reserve space for the label, use the remainder for a usage bar.
+    let bar_width = inner
+        .width
+        .saturating_sub(label.len() as u16 + 3)
+        .clamp(0, 40) as usize;
+
+    let line = if bar_width >= 4 && ds.total > 0 {
+        let filled = ((pct / 100.0) * bar_width as f64).round() as usize;
+        let filled = filled.min(bar_width);
+        let bar = format!("[{}{}]", "#".repeat(filled), "-".repeat(bar_width - filled));
+        format!("{} {}", label, bar)
+    } else {
+        label
+    };
+
+    let para = Paragraph::new(line);
+    frame.render_widget(para, inner);
 }
 
 fn draw_scanning(frame: &mut Frame, app: &App, area: Rect) {

@@ -7,6 +7,9 @@ sizes at a glance via inline bar charts, and deleting files or folders
 directly from the UI.
 
 ```
+┌ Disk Space ────────────────────────────────────────────────────────────────────────────────────────┐
+│Total: 512.0 GiB   Used: 380.4 GiB (74.3%)   Available: 131.6 GiB [##############################----]│
+└──────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ┌ /home/fabs/Work/disk-analyzer ────────────────────────────────────┐┌ Selected ──────────────────┐
 │  59.3%   7.45 GiB [##################------------] big_folder/    ││big_folder                   │
 │  40.7%   5.12 GiB [############------------------] photos/        ││Type: folder                 │
@@ -21,6 +24,8 @@ directly from the UI.
 
 - **Parallel scanning** — walks the filesystem using [`rayon`](https://crates.io/crates/rayon)
   so large directory trees scan quickly on multi-core machines.
+- **Disk usage bar** — a top bar shows the total, used, and available space
+  on the mount containing the scanned path, with a proportional usage bar.
 - **Live progress** — while scanning, the UI shows a running count of scanned
   entries and skipped (unreadable) entries.
 - **Tree-list browser** — each directory level is shown as a flat, size-sorted

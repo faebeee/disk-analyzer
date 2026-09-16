@@ -158,6 +158,7 @@ fn perform_delete(app: &mut App) {
     match result {
         Ok(()) => {
             app.remove_path(&path);
+            app.refresh_disk_space();
             app.status = Some(format!("Deleted {}", path.display()));
         }
         Err(e) => {
@@ -170,5 +171,6 @@ fn perform_refresh(app: &mut App) {
     let path = app.zoom_root_path();
     let fresh = scanner::rescan_path(&path);
     app.refresh_path(&path, fresh);
+    app.refresh_disk_space();
     app.status = Some(format!("Refreshed {}", path.display()));
 }
